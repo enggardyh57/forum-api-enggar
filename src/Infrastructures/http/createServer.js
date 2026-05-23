@@ -63,6 +63,14 @@ await server.register({
     container,
   },
 });
+server.route({
+  method: 'GET',
+  path: '/',
+  handler: () => ({
+    status: 'success',
+    message: 'Forum API running',
+  }),
+});
 server.ext('onPreResponse', onPreResponseError);
 
 
