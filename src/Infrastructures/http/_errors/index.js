@@ -5,6 +5,7 @@ const onPreResponseError = (request, h) => {
   const { response } = request;
 
   if (response instanceof Error) {
+     console.error(response);
     const translatedError =
       DomainErrorTranslator.translate(response);
 
