@@ -29,7 +29,6 @@ class AuthenticationsHandler {
     return response;
   }
  async putAuthenticationHandler(request, h) {
-   console.log('PUT payload:', request.payload);
   const refreshAuthenticationUseCase =
     this._container.getInstance('RefreshAuthenticationUseCase');
 
