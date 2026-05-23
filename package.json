@@ -8,7 +8,8 @@
     "start-dev": "nodemon src/app.js",
     "lint": "eslint ./",
     "migrate": "node-pg-migrate",
-    "test": "jest --coverage --setupFiles dotenv/config -i"
+    "test": "jest --coverage --setupFiles dotenv/config -i",
+    "migrate:test": "node-pg-migrate up -d postgres://postgres:postgres@localhost:5432/forumapi_test"
    
     
   },
