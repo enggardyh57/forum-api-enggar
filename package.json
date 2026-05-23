@@ -20,6 +20,7 @@
     "@hapi/jwt": "^3.2.3",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
+    "hapi-rate-limit": "^8.0.0",
     "instances-container": "^2.0.6",
     "jwt-decode": "^4.0.0",
     "nanoid": "^5.1.11",
