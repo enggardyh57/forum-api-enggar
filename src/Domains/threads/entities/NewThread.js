@@ -1,0 +1,32 @@
+const InvariantError = require('../../../Commons/exceptions/InvariantError');
+class NewThread {
+  constructor(payload) {
+    this._verifyPayload(payload);
+
+    const { title, body, owner } = payload;
+
+    this.title = title;
+    this.body = body;
+    this.owner = owner;
+  }
+
+  _verifyPayload({ title, body, owner }) {
+    if (!title || !body || !owner) {
+      throw new InvariantError(
+        'tidak dapat membuat thread baru karena properti yang dibutuhkan tidak ada'
+      );
+    }
+
+    if (
+      typeof title !== 'string' ||
+      typeof body !== 'string' ||
+      typeof owner !== 'string'
+    ) {
+      throw new InvariantError(
+        'tidak dapat membuat thread baru karena tipe data tidak sesuai'
+      );
+    }
+  }
+}
+
+module.exports = NewThread;

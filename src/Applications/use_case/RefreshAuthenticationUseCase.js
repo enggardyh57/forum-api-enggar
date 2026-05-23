@@ -1,0 +1,55 @@
+const InvariantError = require('../../Commons/exceptions/InvariantError');
+
+class RefreshAuthenticationUseCase {
+  constructor({
+    authenticationRepository,
+    authenticationTokenManager,
+  }) {
+    this._authenticationRepository = authenticationRepository;
+    this._authenticationTokenManager = authenticationTokenManager;
+  }
+
+  async execute(useCasePayload) {
+    this._verifyPayload(useCasePayload);
+
+    const { refreshToken } = useCasePayload;
+
+    await this._authenticationTokenManager
+      .verifyRefreshToken(refreshToken);
+
+    try {
+      await this._authenticationRepository
+        .checkAvailabilityToken(refreshToken);
+    } catch  {
+      throw new InvariantError('refresh token tidak valid');
+    }
+
+    const { id } =
+      await this._authenticationTokenManager
+        .decodePayload(refreshToken);
+
+    const accessToken =
+      await this._authenticationTokenManager
+        .createAccessToken({ id });
+
+    return { accessToken };
+  }
+
+  _verifyPayload(payload) {
+    const { refreshToken } = payload;
+
+    if (!refreshToken) {
+      throw new Error(
+        'REFRESH_AUTHENTICATION_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN'
+      );
+    }
+
+    if (typeof refreshToken !== 'string') {
+      throw new Error(
+        'REFRESH_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION'
+      );
+    }
+  }
+}
+
+module.exports = RefreshAuthenticationUseCase;
