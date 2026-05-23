@@ -1,5 +1,6 @@
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
+const { RateLimiterMemory } = require('rate-limiter-flexible');
 
 const onPreResponseError = require('./_errors');
 const users = require('../../Interfaces/http/api/users');
@@ -13,6 +14,27 @@ const createServer = async container => {
     port: process.env.PORT,
     host: process.env.HOST,
   });
+
+  const rateLimiter = new RateLimiterMemory({
+  points: 90,
+  duration: 60,
+});
+
+server.ext('onRequest', async (request, h) => {
+  if (request.path.startsWith('/threads')) {
+    try {
+      await rateLimiter.consume(request.info.remoteAddress);
+    } catch {
+      return h.response({
+        status: 'fail',
+        message: 'Too many requests',
+      }).code(429).takeover();
+    }
+  }
+
+  return h.continue;
+});
+  
 
   await server.register([
     {

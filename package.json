@@ -10,8 +10,6 @@
     "migrate": "node-pg-migrate up",
     "test": "jest --coverage --setupFiles dotenv/config -i",
     "migrate:test": "node-pg-migrate up -d postgres://postgres:postgres@localhost:5432/forumapi_test"
-   
-    
   },
   "keywords": [],
   "author": "",
@@ -26,7 +24,8 @@
     "jwt-decode": "^4.0.0",
     "nanoid": "^5.1.11",
     "node-pg-migrate": "^8.0.4",
-    "pg": "^8.21.0"
+    "pg": "^8.21.0",
+    "rate-limiter-flexible": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

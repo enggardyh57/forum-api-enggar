@@ -1,6 +1,11 @@
 name: CI
 
 on:
+  push:
+    branches:
+      - main
+      - fitur-cicd
+
   pull_request:
     branches:
       - main
