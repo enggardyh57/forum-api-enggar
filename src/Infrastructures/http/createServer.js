@@ -20,21 +20,35 @@ const createServer = async container => {
   duration: 60,
 });
 
-server.ext('onRequest', async (request, h) => {
-  if (request.path.startsWith('/threads')) {
+ server.ext('onPreAuth', async (request, h) => {
+    const protectedMethods = ['POST', 'DELETE'];
+
+    const protectedPaths = [
+      '/threads',
+      '/authentications',
+    ];
+
+    const isProtected =
+      protectedMethods.includes(request.method.toUpperCase()) &&
+      protectedPaths.some((path) => request.path.startsWith(path));
+
+    if (!isProtected) {
+      return h.continue;
+    }
+
     try {
       await rateLimiter.consume(request.info.remoteAddress);
+      return h.continue;
     } catch {
-      return h.response({
-        status: 'fail',
-        message: 'Too many requests',
-      }).code(429).takeover();
+      return h
+        .response({
+          status: 'fail',
+          message: 'Too many requests',
+        })
+        .code(429)
+        .takeover();
     }
-  }
-
-  return h.continue;
-});
-  
+  });
 
   await server.register([
     {
